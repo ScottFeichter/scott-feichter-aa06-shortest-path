@@ -1,9 +1,11 @@
 /*
 One of the most common uses of a breadth-first search is to find a SINGLE
-shortest path from one node to another. Refactor your implementation of
-breadth-first search and use the technique from the reading. If it is possible
-to reach the end node from the start node, return a SINGLE shortest path as an
-array of nodes from the start to the end node. Otherwise, return null.
+shortest path from one node to another.
+
+Refactor your implementation of breadth-first search and use the technique from
+the reading. If it is possible to reach the end node from the start node,
+return a SINGLE shortest path as an array of nodes from the start to the end node.
+Otherwise, return null.
 
 **IMPORTANT TIP:**  Be very careful creating your new path.  If you modify
 currentPath, you're not just modifying the local copy.  You are also making a
@@ -17,22 +19,44 @@ currentPath.push(neighbor)
 */
 
 const adjList = {
-    1: [2, 5],
-    2: [1, 3, 5],
-    3: [2, 4],
-    4: [3, 5],
-    5: [1, 2, 4],
-    6: []
-}
+  1: [2, 5],
+  2: [1, 3, 5],
+  3: [2, 4],
+  4: [3, 5],
+  5: [1, 2, 4],
+  6: [],
+};
 
 function shortestPath(start, end) {
-  // Your code here 
+  const queue = [[start]];
+  const visited = new Set();
+  const res = [];
+
+  while (queue.length) {
+    const currentPath = queue.shift();
+    const currentNode = currentPath[currentPath.length - 1];
+
+    if (!visited.has(currentNode)) {
+      if (currentNode === end) {
+        return currentPath;
+      }
+      visited.add(currentPath);
+    }
+
+    const neighbors = adjList[currentNode];
+    for (let neighbor of neighbors) {
+      if (!visited.has(neighbor)) {
+        visited.add(currentPath);
+        queue.push([...currentPath, neighbor]);
+      }
+    }
+  }
+  return null;
 }
 
 // console.log(shortestPath(1, 3)); // -> [ 1, 2, 3 ] (One possible solution)
 // console.log(shortestPath(4, 1)); // -> [ 4, 5, 1 ] (One possible solution)
 // console.log(shortestPath(6, 1)); // -> null
-
 
 /******************** DO NOT MODIFY ANY CODE BELOW THIS LINE *****************/
 module.exports = shortestPath;
